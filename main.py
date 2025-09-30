@@ -9,9 +9,9 @@ from services.store import load_to_store
 def main():
     repo_url = input("Enter repository url: ")
     user, repo = get_repo_metadata(repo_url)
-    data = load(repo_url)
+    # data = load(repo_url)
     store = get_store(f"snippets_{user}_{repo}")
-    load_to_store(store, data)
+    # load_to_store(store, data)
     llm = ChatMistralAI(
         model=cfg.LLM_MODELS,
         temperature=0,

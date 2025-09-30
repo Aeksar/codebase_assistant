@@ -6,11 +6,28 @@ from langchain_core.prompts import PromptTemplate
 
 from models import AgentState
 
+from .ranker import rerank
+
 
 def build_graph(store: VectorStore, llm: BaseChatModel, prompt: PromptTemplate):
-    retriever = store.as_retriever(k=15)
+    retriever = store.as_retriever(k=20)
+    
+
+    def rewrite_node(state: AgentState):
+        rewriter_prompt= f"Перепиши вопрос для поиска кода и документации:\n\n{state['question']}\n\nВ своем ответе не добавляй ничего кроме переписанного вопроса."
+        resp = llm.invoke([HumanMessage(content=rewriter_prompt)])
+        state["rewritten"] = resp.content
+        print(resp.content)
+        return state
+    
     def retrieve_node(state: AgentState):
-        docs = retriever.invoke(state["question"])
+        docs = retriever.invoke(state["rewritten"])
+        ranked = rerank(state["rewritten"], docs, top_k=10)
+        state["context"] = "\n\n".join([d.page_content for d in ranked])
+        try:
+            print(docs[0].page_content)
+        except IndexError:
+            pass
         context = "\n\n".join([d.page_content for d in docs])
         state["context"] = context
         return state
@@ -29,11 +46,13 @@ def build_graph(store: VectorStore, llm: BaseChatModel, prompt: PromptTemplate):
         return state
 
     graph_builder = StateGraph(AgentState)
+    graph_builder.add_node("rewritten", rewrite_node)
     graph_builder.add_node("retrieve", retrieve_node)
     graph_builder.add_node("prompt", prompt_node)
     graph_builder.add_node("generate", generate_node)
 
-    graph_builder.set_entry_point("retrieve")
+    graph_builder.set_entry_point("rewritten")
+    graph_builder.add_edge("rewritten", "retrieve")
     graph_builder.add_edge("retrieve", "prompt")
     graph_builder.add_edge("prompt", "generate")
     graph_builder.add_edge("generate", END)

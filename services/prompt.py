@@ -26,3 +26,4 @@ PROMPT = PromptTemplate(
     input_variables=["context", "question"],
     template=prompt_template,
 )
+

@@ -7,7 +7,7 @@ from config import cfg, logger
 
 __all__ = ["load"]
 
-headers = {"Authorization": f"token {cfg.GITHIB_API_KEY}"}
+headers = {"Authorization": f"token {cfg.GITHUB_API_KEY}"}
 
 def decode(data: str):
     decoded_bytes = b64decode(data)
