@@ -1,22 +1,26 @@
-from langchain_mistralai import ChatMistralAI
-
 from config import cfg
-from services import load, get_store, build_graph, PROMPT
-from services.loader import get_repo_metadata
+from services import (
+    get_loader, 
+    get_store, 
+    build_graph, 
+    get_llm,
+    PROMPT
+    )
 from services.store import load_to_store
 
 
 def main():
     repo_url = input("Enter repository url: ")
-    user, repo = get_repo_metadata(repo_url)
-    # data = load(repo_url)
+
+    
+    loader = get_loader(repo_url)
+    user, repo = loader.get_repo_metadata(repo_url)
     store = get_store(f"snippets_{user}_{repo}")
+    llm = get_llm()
+    
+    # data = load(repo_url)
     # load_to_store(store, data)
-    llm = ChatMistralAI(
-        model=cfg.LLM_MODELS,
-        temperature=0,
-        mistral_api_key=cfg.MISTRAL_API_KEY
-    )
+
     graph = build_graph(store, llm, PROMPT)
     while True:
         question = input("Question:")
