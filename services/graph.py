@@ -7,15 +7,14 @@ from langchain_core.prompts import PromptTemplate
 from models import AgentState
 
 from .ranker import rerank
-
+from .prompt import rewrite_prompt
 
 def build_graph(store: VectorStore, llm: BaseChatModel, prompt: PromptTemplate):
     retriever = store.as_retriever(k=20)
     
 
     def rewrite_node(state: AgentState):
-        rewriter_prompt= f"Перепиши вопрос для поиска кода и документации:\n\n{state['question']}\n\nВ своем ответе не добавляй ничего кроме переписанного вопроса."
-        resp = llm.invoke([HumanMessage(content=rewriter_prompt)])
+        resp = llm.invoke([HumanMessage(content=rewrite_prompt)])
         state["rewritten"] = resp.content
         print(resp.content)
         return state

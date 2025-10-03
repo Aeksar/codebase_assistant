@@ -7,8 +7,6 @@ load_dotenv()
 class Settings:
     EMBEDDINGS_MODEL = "microsoft/codebert-base"
     LLM_MODELS = "mistral-large-latest"
-    PROMPT_MODELS = "rlm/rag-prompt"
-    DATA_DIR = "./data"
 
     MISTRAL_API_KEY = os.environ.get("MISTRAL_API_KEY")
     QDRANT_URL = os.environ.get("QDRANT_URL")
