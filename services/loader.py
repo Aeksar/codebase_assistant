@@ -1,22 +1,13 @@
-from langchain_core.documents import Document
-from base64 import b64decode
 import requests
 
 from config import cfg, logger
-
+from utils.crypto import decode_b64
 
 class GitHubLoader:
     def __init__(self, repo_url: str):
         self.headers = {"Authorization": f"token {cfg.GITHUB_API_KEY}"}
         user, repo = self.get_repo_metadata(repo_url)
         self.api_url = f"https://api.github.com/repos/{user}/{repo}/git/trees/main?recursive=100"
-
-    @staticmethod
-    def decode(data: str):
-        decoded_bytes = b64decode(data)
-        decoded_text = decoded_bytes.decode('utf-8')
-        logger.debug(decoded_text[:200] + "\n..." if len(decoded_text) > 200 else decoded_text)
-        return decoded_text
 
     @staticmethod
     def get_repo_metadata(url: str):
@@ -43,7 +34,7 @@ class GitHubLoader:
             data = response.json()
             encoded_content = data["content"]
             if encoded_content:
-                content = self._decode(encoded_content)
+                content = self.decode_b64(encoded_content)
                 return content
         except Exception as e:
             logger.error(f"Error getting content for {url}: {e}")
