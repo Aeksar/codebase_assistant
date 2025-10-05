@@ -1,6 +1,10 @@
 from langchain.prompts import PromptTemplate
 
-prompt_template = """
+
+__all__ = ["MAIN_TAMPLATE", "REWRITE_TEMPLATE"]
+
+
+main_template_message = """
 You are a smart and concise programmer's assistant.
 
 Tasks:
@@ -22,12 +26,10 @@ Context (code snippets and documentation):
 {context}
 """
 
-PROMPT = PromptTemplate(
-    input_variables=["context", "question"],
-    template=prompt_template,
-)
+MAIN_TAMPLATE = PromptTemplate.from_template(main_template_message)
 
-rewrite_prompt = """
+
+rewrite_prompt_message = """
 Твоя задача — переписать вопрос пользователя так, чтобы он был максимально понятным 
 для поиска в базе кода и документации. 
 ❌ Не добавляй инструкции, форматирование или лишние слова. 
@@ -38,3 +40,23 @@ rewrite_prompt = """
 
 Переписанный вопрос:
 """
+
+REWRITE_TAMPLATE = PromptTemplate.from_template(rewrite_prompt_message)
+
+
+namer_template_message="""
+    You're a smart assistant in coming up with names for commits.
+    Task: To come up with names for a commit based on its description in context
+    Context:
+    {context}
+
+    Response format:
+    {format_instruction}
+
+
+    IMPORTANT:
+        MAX LENGTH: 30
+        IF CONTEXT IS EMPTY RETURN ERROR WHERE YOU SAY ABOUT IT
+"""
+
+NAMER_TAMPLATE = PromptTemplate.from_template(namer_template_message)

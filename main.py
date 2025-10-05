@@ -4,7 +4,7 @@ from services import (
     get_store, 
     build_graph, 
     get_llm,
-    PROMPT
+    MAIN_TAMPLATE
     )
 from services.store import load_to_store
 
@@ -21,7 +21,7 @@ def main():
     # data = load(repo_url)
     # load_to_store(store, data)
 
-    graph = build_graph(store, llm, PROMPT)
+    graph = build_graph(store, llm, MAIN_TAMPLATE)
     while True:
         question = input("Question:")
         response = graph.invoke({"question": question})
