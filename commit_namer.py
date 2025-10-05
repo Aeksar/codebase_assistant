@@ -1,10 +1,6 @@
 import subprocess
-
-from langchain.prompts import PromptTemplate
-from langchain_mistralai import ChatMistralAI
 from langchain.output_parsers import PydanticOutputParser
 
-from config import cfg
 from services import get_llm
 from models.namer import OutputModel
 from services.prompt import NAMER_TAMPLATE

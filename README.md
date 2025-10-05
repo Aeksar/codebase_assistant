@@ -23,16 +23,20 @@
 
 ## Способ запуска
 
-### 1. Клонирование репозитория
+### 1. Клонируйте репозиторий
 ```bash
 git clone https://github.com/Aeksar/codebase_assistant.git
 cd codebase_assistant
 ```
-### 2. Запустите Qdrant череp Docker Compose
+### 2. Установите зависимости
+```bash
+pip install -r requirements.txt
+```
+### 3. Запустите Qdrant череp Docker Compose
 ```bash
 docker compose up -d
 ```
-### 3. Запустите ассистента
+### 4. Запустите ассистента
 ```bash
 python3 main.py
 ```

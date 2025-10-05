@@ -1,0 +1,15 @@
+dotenv
+pydantic
+langchain
+langchain_core
+langchain_mistralai
+requests
+sentence_transformers
+qdrant_client
+langchain_huggingface
+langchain_qdrant
+langgraph
+
+
+
+
